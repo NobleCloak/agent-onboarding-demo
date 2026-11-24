@@ -1,0 +1,601 @@
+
+=== how the mock issues tokens ===
+{
+  "note": "fixed set printed at start (and GET /__mock/tokens); no mint route",
+  "users": [
+    "creator_user (user_creator)",
+    "approver (user_approver)",
+    "member (user_member)",
+    "admin (user_admin)",
+    "approver_surface_token (user_creator + admin role + approvals-module client_id)"
+  ],
+  "agent": "creator = service principal svc_adapter"
+}
+
+=== propose.mjs ===
+exit 0; approval c607cbfa-0d02-4adb-8227-a75cc6b8c8b2
+
+=== proposal approved ===
+{
+  "status": 200,
+  "state": "consumed"
+}
+
+=== agent paused: interrupt values ===
+[
+  {
+    "id": "1c28d2be80e40d30b496899feed5d338",
+    "value": {
+      "approval_id": "692cec0c-eab8-4791-8be7-a4ed79c0ba2c",
+      "tool_ref": "ext:fernhill-desk:google_create_account",
+      "tool_call_id": "c2",
+      "summary": "Approval required to run ext:fernhill-desk:google_create_account."
+    }
+  },
+  {
+    "id": "9735dc8e91133f7004ada31934e14549",
+    "value": {
+      "approval_id": "2d0b06e5-c8a0-4a6f-8558-bb5368a10874",
+      "tool_ref": "ext:fernhill-desk:okta_create_user",
+      "tool_call_id": "c1",
+      "summary": "Approval required to run ext:fernhill-desk:okta_create_user."
+    }
+  },
+  {
+    "id": "0eb5cc7c9f6272c5cc65967f2aa85163",
+    "value": {
+      "approval_id": "379f332a-9922-4daf-b94a-c96534360a7b",
+      "tool_ref": "ext:fernhill-desk:slack_invite",
+      "tool_call_id": "c3",
+      "summary": "Approval required to run ext:fernhill-desk:slack_invite."
+    }
+  }
+]
+
+=== tools that actually ran so far ===
+[]
+
+=== round 1: approving what is pending (mock asks on every ext: tool) ===
+[
+  "ext:fernhill-desk:slack_invite",
+  "ext:fernhill-desk:okta_create_user",
+  "ext:fernhill-desk:google_create_account"
+]
+
+=== round 2: approving what is pending (mock asks on every ext: tool) ===
+[
+  "ext:fernhill-desk:print_order_business_cards",
+  "ext:fernhill-desk:merch_order_polos",
+  "ext:fernhill-desk:cdw_order_laptop"
+]
+
+=== worker so far ===
+[
+  "[@noblecloak/langgraph] resumer started as principal svc_adapter; it resumes only the approvals this principal created.",
+  "{\"event\":\"worker_ready\"}",
+  "{\"event\":\"worker_resumed\",\"approval_id\":\"379f332a-9922-4daf-b94a-c96534360a7b\",\"status\":\"resumed\",\"resolution\":\"approved\",\"messages\":[\"b\",\"5\",\"2\"],\"interrupts\":[{\"approval_id\":\"2d0b06e5-c8a0-4a6f-8558-bb5368a10874\",\"tool_ref\":\"ext:fernhill-desk:okta_create_user\",\"tool_call_id\":\"c1\",\"summary\":\"Approval required to run ext:fernhill-desk:okta_create_user.\"},{\"approval_id\":\"692cec0c-eab8-4791-8be7-a4ed79c0ba2c\",\"tool_ref\":\"ext:fernhill-desk:google_create_account\",\"tool_call_id\":\"c2\",\"summary\":\"Approval required to run ext:fernhill-desk:google_create_account.\"}]}",
+  "{\"event\":\"worker_resumed\",\"approval_id\":\"2d0b06e5-c8a0-4a6f-8558-bb5368a10874\",\"status\":\"resumed\",\"resolution\":\"approved\",\"messages\":[\"b\",\"5\",\"f\",\"d\"],\"interrupts\":[{\"approval_id\":\"692cec0c-eab8-4791-8be7-a4ed79c0ba2c\",\"tool_ref\":\"ext:fernhill-desk:google_create_account\",\"tool_call_id\":\"c2\",\"summary\":\"Approval required to run ext:fernhill-desk:google_create_account.\"}]}",
+  "[@noblecloak/langgraph] opened approval cd44d456-9f61-42ba-b34b-698358796926 for ext:fernhill-desk:cdw_order_laptop as principal svc_adapter; the resumer must run as the same principal.",
+  "{\"event\":\"worker_resumed\",\"approval_id\":\"692cec0c-eab8-4791-8be7-a4ed79c0ba2c\",\"status\":\"resumed\",\"resolution\":\"approved\",\"messages\":[\"b\",\"5\",\"f\",\"2\",\"6\",\"d\"],\"interrupts\":[{\"approval_id\":\"cd44d456-9f61-42ba-b34b-698358796926\",\"tool_ref\":\"ext:fernhill-desk:cdw_order_laptop\",\"tool_call_id\":\"c4\",\"summary\":\"Approval required to run ext:fernhill-desk:cdw_order_laptop.\"},{\"approval_id\":\"6bbbb0a7-f409-4f69-8929-c197d07886a8\",\"tool_ref\":\"ext:fernhill-desk:merch_order_polos\",\"tool_call_id\":\"c5\",\"summary\":\"Approval required to run ext:fernhill-desk:merch_order_polos.\"},{\"approval_id\":\"e5fdf92f-9053-4815-8966-5d5152a56807\",\"tool_ref\":\"ext:fernhill-desk:print_order_business_cards\",\"tool_call_id\":\"c6\",\"summary\":\"Approval required to run ext:fernhill-desk:print_order_business_cards.\"}]}",
+  "{\"event\":\"worker_resumed\",\"approval_id\":\"e5fdf92f-9053-4815-8966-5d5152a56807\",\"status\":\"resumed\",\"resolution\":\"approved\",\"messages\":[\"b\",\"5\",\"f\",\"2\",\"6\",\"d\",\"3\"],\"interrupts\":[{\"approval_id\":\"cd44d456-9f61-42ba-b34b-698358796926\",\"tool_ref\":\"ext:fernhill-desk:cdw_order_laptop\",\"tool_call_id\":\"c4\",\"summary\":\"Approval required to run ext:fernhill-desk:cdw_order_laptop.\"},{\"approval_id\":\"6bbbb0a7-f409-4f69-8929-c197d07886a8\",\"tool_ref\":\"ext:fernhill-desk:merch_order_polos\",\"tool_call_id\":\"c5\",\"summary\":\"Approval required to run ext:fernhill-desk:merch_order_polos.\"}]}",
+  "{\"event\":\"worker_resumed\",\"approval_id\":\"6bbbb0a7-f409-4f69-8929-c197d07886a8\",\"status\":\"resumed\",\"resolution\":\"approved\",\"messages\":[\"b\",\"5\",\"f\",\"2\",\"6\",\"d\",\"4\",\"c\"],\"interrupts\":[{\"approval_id\":\"cd44d456-9f61-42ba-b34b-698358796926\",\"tool_ref\":\"ext:fernhill-desk:cdw_order_laptop\",\"tool_call_id\":\"c4\",\"summary\":\"Approval required to run ext:fernhill-desk:cdw_order_laptop.\"}]}",
+  "{\"event\":\"worker_resumed\",\"approval_id\":\"cd44d456-9f61-42ba-b34b-698358796926\",\"status\":\"resumed\",\"resolution\":\"approved\",\"messages\":[\"b\",\"5\",\"f\",\"2\",\"6\",\"d\",\"c\",\"b\",\"5\",\"3\",\"1\",\"4\"],\"interrupts\":[{\"approval_id\":\"6b1a7072-2e11-4667-bf06-f0b9b6f174c9\",\"tool_ref\":\"ext:fernhill-desk:adp_create_employee\",\"tool_call_id\":\"c7\",\"summary\":\"Approval required to run ext:fernhill-desk:adp_create_employee.\"},{\"approval_id\":\"780b9020-a744-46f1-bb42-696098efd9d6\",\"tool_ref\":\"ext:fernhill-desk:okta_assign_admin_role\",\"tool_call_id\":\"c9\",\"summary\":\"Approval required to run ext:fernhill-desk:okta_assign_admin_role.\"},{\"approval_id\":\"2baa5962-af6c-4652-b67a-d31855728704\",\"tool_ref\":\"ext:fernhill-desk:mercury_issue_card\",\"tool_call_id\":\"c8\",\"summary\":\"Approval required to run ext:fernhill-desk:mercury_issue_card.\"}]}"
+]
+
+=== approval LIST payload (pending, approver=me), money-and-access turn ===
+{
+  "status": 200,
+  "body": {
+    "data": [
+      {
+        "id": "2baa5962-af6c-4652-b67a-d31855728704",
+        "state": "pending",
+        "tool_ref": "ext:fernhill-desk:mercury_issue_card",
+        "obligation_kind": "tool_invocation",
+        "action_digest": "3a47cb661b40b2e12213f0783edcb9ffb60f3dd724bc4d51442e5bffb06de7e9",
+        "scope_id": "scope_031c5f43-eb5c-4a39-9ddf-a4866757bfa9",
+        "side_effect_level": "external",
+        "continuation_kind": "langgraph",
+        "created_at": "2026-11-03T04:54:51.110Z",
+        "expires_at": "2026-11-03T05:54:51.110Z",
+        "resolved_at": null,
+        "outcome_record_id": null,
+        "resolution_history": [],
+        "requester": {
+          "id": "svc_adapter",
+          "kind": "service",
+          "display_name": "Adapter"
+        },
+        "arguments_state": "shown",
+        "agent": {
+          "id": "agent_d91081df",
+          "name": "Fernhill Desk",
+          "parent": null
+        },
+        "run": {
+          "id": "run_84334750",
+          "kind": "external"
+        }
+      },
+      {
+        "id": "780b9020-a744-46f1-bb42-696098efd9d6",
+        "state": "pending",
+        "tool_ref": "ext:fernhill-desk:okta_assign_admin_role",
+        "obligation_kind": "tool_invocation",
+        "action_digest": "07cffd90b89eeb1d96778c43eeccb6bc4196fb03b919431ace77f0369889cd58",
+        "scope_id": "scope_031c5f43-eb5c-4a39-9ddf-a4866757bfa9",
+        "side_effect_level": "admin",
+        "continuation_kind": "langgraph",
+        "created_at": "2026-11-03T04:54:51.109Z",
+        "expires_at": "2026-11-03T05:54:51.109Z",
+        "resolved_at": null,
+        "outcome_record_id": null,
+        "resolution_history": [],
+        "requester": {
+          "id": "svc_adapter",
+          "kind": "service",
+          "display_name": "Adapter"
+        },
+        "arguments_state": "shown",
+        "agent": {
+          "id": "agent_d91081df",
+          "name": "Fernhill Desk",
+          "parent": null
+        },
+        "run": {
+          "id": "run_84334750",
+          "kind": "external"
+        }
+      },
+      {
+        "id": "6b1a7072-2e11-4667-bf06-f0b9b6f174c9",
+        "state": "pending",
+        "tool_ref": "ext:fernhill-desk:adp_create_employee",
+        "obligation_kind": "tool_invocation",
+        "action_digest": "241604c612ef5a2fa30943b2c313d94a2eabc1017113c23d60d0550142d4a7fb",
+        "scope_id": "scope_031c5f43-eb5c-4a39-9ddf-a4866757bfa9",
+        "side_effect_level": "external",
+        "continuation_kind": "langgraph",
+        "created_at": "2026-11-03T04:54:51.107Z",
+        "expires_at": "2026-11-03T05:54:51.107Z",
+        "resolved_at": null,
+        "outcome_record_id": null,
+        "resolution_history": [],
+        "requester": {
+          "id": "svc_adapter",
+          "kind": "service",
+          "display_name": "Adapter"
+        },
+        "arguments_state": "shown",
+        "agent": {
+          "id": "agent_d91081df",
+          "name": "Fernhill Desk",
+          "parent": null
+        },
+        "run": {
+          "id": "run_84334750",
+          "kind": "external"
+        }
+      }
+    ],
+    "meta": {
+      "request_id": "req_5ea1a11a-cd8c-4f50-9a39-ad43e05d6fd8",
+      "deployment": "hosted",
+      "cursor": null,
+      "next": null
+    }
+  }
+}
+
+=== pending at once (item 4) ===
+[
+  "ext:fernhill-desk:mercury_issue_card",
+  "ext:fernhill-desk:okta_assign_admin_role",
+  "ext:fernhill-desk:adp_create_employee"
+]
+
+=== approval DETAIL payload (payroll) ===
+{
+  "data": {
+    "id": "6b1a7072-2e11-4667-bf06-f0b9b6f174c9",
+    "state": "pending",
+    "tool_ref": "ext:fernhill-desk:adp_create_employee",
+    "obligation_kind": "tool_invocation",
+    "action_digest": "241604c612ef5a2fa30943b2c313d94a2eabc1017113c23d60d0550142d4a7fb",
+    "scope_id": "scope_031c5f43-eb5c-4a39-9ddf-a4866757bfa9",
+    "side_effect_level": "external",
+    "continuation_kind": "langgraph",
+    "created_at": "2026-11-03T04:54:51.107Z",
+    "expires_at": "2026-11-03T05:54:51.107Z",
+    "resolved_at": null,
+    "outcome_record_id": null,
+    "resolution_history": [],
+    "requester": {
+      "id": "svc_adapter",
+      "kind": "service",
+      "display_name": "Adapter"
+    },
+    "arguments_state": "shown",
+    "arguments": {
+      "name": "Maya Torres",
+      "salary": 98000
+    },
+    "agent": {
+      "id": "agent_d91081df",
+      "name": "Fernhill Desk",
+      "parent": null
+    },
+    "run": {
+      "id": "run_84334750",
+      "kind": "external"
+    }
+  },
+  "meta": {
+    "request_id": "req_d4c8b209-4827-4caa-a410-9e4736acfd3d",
+    "deployment": "hosted"
+  }
+}
+
+=== tools that ran so far ===
+[
+  "slack_invite",
+  "okta_create_user",
+  "google_create_account",
+  "print_order_business_cards",
+  "merch_order_polos",
+  "cdw_order_laptop",
+  "tracker_search"
+]
+
+=== approve payroll -> status ===
+200
+
+=== worker after payroll approval ===
+[
+  "{\"event\":\"worker_resumed\",\"approval_id\":\"e5fdf92f-9053-4815-8966-5d5152a56807\",\"status\":\"resumed\",\"resolution\":\"approved\",\"messages\":[\"b\",\"5\",\"f\",\"2\",\"6\",\"d\",\"3\"],\"interrupts\":[{\"approval_id\":\"cd44d456-9f61-42ba-b34b-698358796926\",\"tool_ref\":\"ext:fernhill-desk:cdw_order_laptop\",\"tool_call_id\":\"c4\",\"summary\":\"Approval required to run ext:fernhill-desk:cdw_order_laptop.\"},{\"approval_id\":\"6bbbb0a7-f409-4f69-8929-c197d07886a8\",\"tool_ref\":\"ext:fernhill-desk:merch_order_polos\",\"tool_call_id\":\"c5\",\"summary\":\"Approval required to run ext:fernhill-desk:merch_order_polos.\"}]}",
+  "{\"event\":\"worker_resumed\",\"approval_id\":\"6bbbb0a7-f409-4f69-8929-c197d07886a8\",\"status\":\"resumed\",\"resolution\":\"approved\",\"messages\":[\"b\",\"5\",\"f\",\"2\",\"6\",\"d\",\"4\",\"c\"],\"interrupts\":[{\"approval_id\":\"cd44d456-9f61-42ba-b34b-698358796926\",\"tool_ref\":\"ext:fernhill-desk:cdw_order_laptop\",\"tool_call_id\":\"c4\",\"summary\":\"Approval required to run ext:fernhill-desk:cdw_order_laptop.\"}]}",
+  "{\"event\":\"worker_resumed\",\"approval_id\":\"cd44d456-9f61-42ba-b34b-698358796926\",\"status\":\"resumed\",\"resolution\":\"approved\",\"messages\":[\"b\",\"5\",\"f\",\"2\",\"6\",\"d\",\"c\",\"b\",\"5\",\"3\",\"1\",\"4\"],\"interrupts\":[{\"approval_id\":\"6b1a7072-2e11-4667-bf06-f0b9b6f174c9\",\"tool_ref\":\"ext:fernhill-desk:adp_create_employee\",\"tool_call_id\":\"c7\",\"summary\":\"Approval required to run ext:fernhill-desk:adp_create_employee.\"},{\"approval_id\":\"780b9020-a744-46f1-bb42-696098efd9d6\",\"tool_ref\":\"ext:fernhill-desk:okta_assign_admin_role\",\"tool_call_id\":\"c9\",\"summary\":\"Approval required to run ext:fernhill-desk:okta_assign_admin_role.\"},{\"approval_id\":\"2baa5962-af6c-4652-b67a-d31855728704\",\"tool_ref\":\"ext:fernhill-desk:mercury_issue_card\",\"tool_call_id\":\"c8\",\"summary\":\"Approval required to run ext:fernhill-desk:mercury_issue_card.\"}]}",
+  "{\"event\":\"worker_resumed\",\"approval_id\":\"6b1a7072-2e11-4667-bf06-f0b9b6f174c9\",\"status\":\"resumed\",\"resolution\":\"approved\",\"messages\":[\"b\",\"5\",\"f\",\"2\",\"6\",\"d\",\"c\",\"b\",\"5\",\"3\",\"0\",\"8\",\"6\"],\"interrupts\":[{\"approval_id\":\"2baa5962-af6c-4652-b67a-d31855728704\",\"tool_ref\":\"ext:fernhill-desk:mercury_issue_card\",\"tool_call_id\":\"c8\",\"summary\":\"Approval required to run ext:fernhill-desk:mercury_issue_card.\"},{\"approval_id\":\"780b9020-a744-46f1-bb42-696098efd9d6\",\"tool_ref\":\"ext:fernhill-desk:okta_assign_admin_role\",\"tool_call_id\":\"c9\",\"summary\":\"Approval required to run ext:fernhill-desk:okta_assign_admin_role.\"}]}"
+]
+
+=== tools that ran after payroll approval ===
+[
+  "slack_invite",
+  "okta_create_user",
+  "google_create_account",
+  "print_order_business_cards",
+  "merch_order_polos",
+  "cdw_order_laptop",
+  "tracker_search",
+  "adp_create_employee"
+]
+
+=== deny card -> status ===
+200
+
+=== worker after card denial (item 5) ===
+[
+  "{\"event\":\"worker_resumed\",\"approval_id\":\"6bbbb0a7-f409-4f69-8929-c197d07886a8\",\"status\":\"resumed\",\"resolution\":\"approved\",\"messages\":[\"b\",\"5\",\"f\",\"2\",\"6\",\"d\",\"4\",\"c\"],\"interrupts\":[{\"approval_id\":\"cd44d456-9f61-42ba-b34b-698358796926\",\"tool_ref\":\"ext:fernhill-desk:cdw_order_laptop\",\"tool_call_id\":\"c4\",\"summary\":\"Approval required to run ext:fernhill-desk:cdw_order_laptop.\"}]}",
+  "{\"event\":\"worker_resumed\",\"approval_id\":\"cd44d456-9f61-42ba-b34b-698358796926\",\"status\":\"resumed\",\"resolution\":\"approved\",\"messages\":[\"b\",\"5\",\"f\",\"2\",\"6\",\"d\",\"c\",\"b\",\"5\",\"3\",\"1\",\"4\"],\"interrupts\":[{\"approval_id\":\"6b1a7072-2e11-4667-bf06-f0b9b6f174c9\",\"tool_ref\":\"ext:fernhill-desk:adp_create_employee\",\"tool_call_id\":\"c7\",\"summary\":\"Approval required to run ext:fernhill-desk:adp_create_employee.\"},{\"approval_id\":\"780b9020-a744-46f1-bb42-696098efd9d6\",\"tool_ref\":\"ext:fernhill-desk:okta_assign_admin_role\",\"tool_call_id\":\"c9\",\"summary\":\"Approval required to run ext:fernhill-desk:okta_assign_admin_role.\"},{\"approval_id\":\"2baa5962-af6c-4652-b67a-d31855728704\",\"tool_ref\":\"ext:fernhill-desk:mercury_issue_card\",\"tool_call_id\":\"c8\",\"summary\":\"Approval required to run ext:fernhill-desk:mercury_issue_card.\"}]}",
+  "{\"event\":\"worker_resumed\",\"approval_id\":\"6b1a7072-2e11-4667-bf06-f0b9b6f174c9\",\"status\":\"resumed\",\"resolution\":\"approved\",\"messages\":[\"b\",\"5\",\"f\",\"2\",\"6\",\"d\",\"c\",\"b\",\"5\",\"3\",\"0\",\"8\",\"6\"],\"interrupts\":[{\"approval_id\":\"2baa5962-af6c-4652-b67a-d31855728704\",\"tool_ref\":\"ext:fernhill-desk:mercury_issue_card\",\"tool_call_id\":\"c8\",\"summary\":\"Approval required to run ext:fernhill-desk:mercury_issue_card.\"},{\"approval_id\":\"780b9020-a744-46f1-bb42-696098efd9d6\",\"tool_ref\":\"ext:fernhill-desk:okta_assign_admin_role\",\"tool_call_id\":\"c9\",\"summary\":\"Approval required to run ext:fernhill-desk:okta_assign_admin_role.\"}]}",
+  "{\"event\":\"worker_resumed\",\"approval_id\":\"2baa5962-af6c-4652-b67a-d31855728704\",\"status\":\"resumed\",\"resolution\":\"rejected\",\"messages\":[\"b\",\"5\",\"f\",\"2\",\"6\",\"d\",\"c\",\"b\",\"5\",\"3\",\"5\",\"d\",\"9\",\"1\"],\"interrupts\":[{\"approval_id\":\"780b9020-a744-46f1-bb42-696098efd9d6\",\"tool_ref\":\"ext:fernhill-desk:okta_assign_admin_role\",\"tool_call_id\":\"c9\",\"summary\":\"Approval required to run ext:fernhill-desk:okta_assign_admin_role.\"}]}"
+]
+
+=== tools that ran after card denial ===
+[
+  "slack_invite",
+  "okta_create_user",
+  "google_create_account",
+  "print_order_business_cards",
+  "merch_order_polos",
+  "cdw_order_laptop",
+  "tracker_search",
+  "adp_create_employee"
+]
+
+=== still pending after the card denial ===
+[
+  "ext:fernhill-desk:okta_assign_admin_role"
+]
+
+=== worker at end ===
+[
+  "[@noblecloak/langgraph] resumer started as principal svc_adapter; it resumes only the approvals this principal created.",
+  "{\"event\":\"worker_ready\"}",
+  "{\"event\":\"worker_resumed\",\"approval_id\":\"379f332a-9922-4daf-b94a-c96534360a7b\",\"status\":\"resumed\",\"resolution\":\"approved\",\"messages\":[\"b\",\"5\",\"2\"],\"interrupts\":[{\"approval_id\":\"2d0b06e5-c8a0-4a6f-8558-bb5368a10874\",\"tool_ref\":\"ext:fernhill-desk:okta_create_user\",\"tool_call_id\":\"c1\",\"summary\":\"Approval required to run ext:fernhill-desk:okta_create_user.\"},{\"approval_id\":\"692cec0c-eab8-4791-8be7-a4ed79c0ba2c\",\"tool_ref\":\"ext:fernhill-desk:google_create_account\",\"tool_call_id\":\"c2\",\"summary\":\"Approval required to run ext:fernhill-desk:google_create_account.\"}]}",
+  "{\"event\":\"worker_resumed\",\"approval_id\":\"2d0b06e5-c8a0-4a6f-8558-bb5368a10874\",\"status\":\"resumed\",\"resolution\":\"approved\",\"messages\":[\"b\",\"5\",\"f\",\"d\"],\"interrupts\":[{\"approval_id\":\"692cec0c-eab8-4791-8be7-a4ed79c0ba2c\",\"tool_ref\":\"ext:fernhill-desk:google_create_account\",\"tool_call_id\":\"c2\",\"summary\":\"Approval required to run ext:fernhill-desk:google_create_account.\"}]}",
+  "[@noblecloak/langgraph] opened approval cd44d456-9f61-42ba-b34b-698358796926 for ext:fernhill-desk:cdw_order_laptop as principal svc_adapter; the resumer must run as the same principal.",
+  "{\"event\":\"worker_resumed\",\"approval_id\":\"692cec0c-eab8-4791-8be7-a4ed79c0ba2c\",\"status\":\"resumed\",\"resolution\":\"approved\",\"messages\":[\"b\",\"5\",\"f\",\"2\",\"6\",\"d\"],\"interrupts\":[{\"approval_id\":\"cd44d456-9f61-42ba-b34b-698358796926\",\"tool_ref\":\"ext:fernhill-desk:cdw_order_laptop\",\"tool_call_id\":\"c4\",\"summary\":\"Approval required to run ext:fernhill-desk:cdw_order_laptop.\"},{\"approval_id\":\"6bbbb0a7-f409-4f69-8929-c197d07886a8\",\"tool_ref\":\"ext:fernhill-desk:merch_order_polos\",\"tool_call_id\":\"c5\",\"summary\":\"Approval required to run ext:fernhill-desk:merch_order_polos.\"},{\"approval_id\":\"e5fdf92f-9053-4815-8966-5d5152a56807\",\"tool_ref\":\"ext:fernhill-desk:print_order_business_cards\",\"tool_call_id\":\"c6\",\"summary\":\"Approval required to run ext:fernhill-desk:print_order_business_cards.\"}]}",
+  "{\"event\":\"worker_resumed\",\"approval_id\":\"e5fdf92f-9053-4815-8966-5d5152a56807\",\"status\":\"resumed\",\"resolution\":\"approved\",\"messages\":[\"b\",\"5\",\"f\",\"2\",\"6\",\"d\",\"3\"],\"interrupts\":[{\"approval_id\":\"cd44d456-9f61-42ba-b34b-698358796926\",\"tool_ref\":\"ext:fernhill-desk:cdw_order_laptop\",\"tool_call_id\":\"c4\",\"summary\":\"Approval required to run ext:fernhill-desk:cdw_order_laptop.\"},{\"approval_id\":\"6bbbb0a7-f409-4f69-8929-c197d07886a8\",\"tool_ref\":\"ext:fernhill-desk:merch_order_polos\",\"tool_call_id\":\"c5\",\"summary\":\"Approval required to run ext:fernhill-desk:merch_order_polos.\"}]}",
+  "{\"event\":\"worker_resumed\",\"approval_id\":\"6bbbb0a7-f409-4f69-8929-c197d07886a8\",\"status\":\"resumed\",\"resolution\":\"approved\",\"messages\":[\"b\",\"5\",\"f\",\"2\",\"6\",\"d\",\"4\",\"c\"],\"interrupts\":[{\"approval_id\":\"cd44d456-9f61-42ba-b34b-698358796926\",\"tool_ref\":\"ext:fernhill-desk:cdw_order_laptop\",\"tool_call_id\":\"c4\",\"summary\":\"Approval required to run ext:fernhill-desk:cdw_order_laptop.\"}]}",
+  "{\"event\":\"worker_resumed\",\"approval_id\":\"cd44d456-9f61-42ba-b34b-698358796926\",\"status\":\"resumed\",\"resolution\":\"approved\",\"messages\":[\"b\",\"5\",\"f\",\"2\",\"6\",\"d\",\"c\",\"b\",\"5\",\"3\",\"1\",\"4\"],\"interrupts\":[{\"approval_id\":\"6b1a7072-2e11-4667-bf06-f0b9b6f174c9\",\"tool_ref\":\"ext:fernhill-desk:adp_create_employee\",\"tool_call_id\":\"c7\",\"summary\":\"Approval required to run ext:fernhill-desk:adp_create_employee.\"},{\"approval_id\":\"780b9020-a744-46f1-bb42-696098efd9d6\",\"tool_ref\":\"ext:fernhill-desk:okta_assign_admin_role\",\"tool_call_id\":\"c9\",\"summary\":\"Approval required to run ext:fernhill-desk:okta_assign_admin_role.\"},{\"approval_id\":\"2baa5962-af6c-4652-b67a-d31855728704\",\"tool_ref\":\"ext:fernhill-desk:mercury_issue_card\",\"tool_call_id\":\"c8\",\"summary\":\"Approval required to run ext:fernhill-desk:mercury_issue_card.\"}]}",
+  "{\"event\":\"worker_resumed\",\"approval_id\":\"6b1a7072-2e11-4667-bf06-f0b9b6f174c9\",\"status\":\"resumed\",\"resolution\":\"approved\",\"messages\":[\"b\",\"5\",\"f\",\"2\",\"6\",\"d\",\"c\",\"b\",\"5\",\"3\",\"0\",\"8\",\"6\"],\"interrupts\":[{\"approval_id\":\"2baa5962-af6c-4652-b67a-d31855728704\",\"tool_ref\":\"ext:fernhill-desk:mercury_issue_card\",\"tool_call_id\":\"c8\",\"summary\":\"Approval required to run ext:fernhill-desk:mercury_issue_card.\"},{\"approval_id\":\"780b9020-a744-46f1-bb42-696098efd9d6\",\"tool_ref\":\"ext:fernhill-desk:okta_assign_admin_role\",\"tool_call_id\":\"c9\",\"summary\":\"Approval required to run ext:fernhill-desk:okta_assign_admin_role.\"}]}",
+  "{\"event\":\"worker_resumed\",\"approval_id\":\"2baa5962-af6c-4652-b67a-d31855728704\",\"status\":\"resumed\",\"resolution\":\"rejected\",\"messages\":[\"b\",\"5\",\"f\",\"2\",\"6\",\"d\",\"c\",\"b\",\"5\",\"3\",\"5\",\"d\",\"9\",\"1\"],\"interrupts\":[{\"approval_id\":\"780b9020-a744-46f1-bb42-696098efd9d6\",\"tool_ref\":\"ext:fernhill-desk:okta_assign_admin_role\",\"tool_call_id\":\"c9\",\"summary\":\"Approval required to run ext:fernhill-desk:okta_assign_admin_role.\"}]}",
+  "{\"event\":\"worker_resumed\",\"approval_id\":\"780b9020-a744-46f1-bb42-696098efd9d6\",\"status\":\"resumed\",\"resolution\":\"rejected\",\"messages\":[\"b\",\"5\",\"f\",\"2\",\"6\",\"d\",\"c\",\"b\",\"5\",\"3\",\"9\",\"e\",\"a\",\"2\",\"3\",\"3\"]}"
+]
+
+=== tools that actually ran at the end ===
+[
+  "slack_invite",
+  "okta_create_user",
+  "google_create_account",
+  "print_order_business_cards",
+  "merch_order_polos",
+  "cdw_order_laptop",
+  "tracker_search",
+  "adp_create_employee"
+]
+
+=== thread messages ===
+[
+  {
+    "type": "human",
+    "content": "Maya starts Monday as Marketing Coordinator. Same setup as Dana."
+  },
+  {
+    "type": "ai",
+    "name": "model",
+    "content": "",
+    "tool_calls": [
+      "okta_create_user",
+      "google_create_account",
+      "slack_invite"
+    ]
+  },
+  {
+    "type": "tool",
+    "name": "okta_create_user",
+    "status": "success",
+    "content": "okta_create_user done"
+  },
+  {
+    "type": "tool",
+    "name": "google_create_account",
+    "status": "success",
+    "content": "google_create_account done"
+  },
+  {
+    "type": "tool",
+    "name": "slack_invite",
+    "status": "success",
+    "content": "slack_invite done"
+  },
+  {
+    "type": "ai",
+    "name": "model",
+    "content": "",
+    "tool_calls": [
+      "cdw_order_laptop",
+      "merch_order_polos",
+      "print_order_business_cards"
+    ]
+  },
+  {
+    "type": "tool",
+    "name": "cdw_order_laptop",
+    "status": "success",
+    "content": "cdw_order_laptop done"
+  },
+  {
+    "type": "tool",
+    "name": "merch_order_polos",
+    "status": "success",
+    "content": "merch_order_polos done"
+  },
+  {
+    "type": "tool",
+    "name": "print_order_business_cards",
+    "status": "success",
+    "content": "print_order_business_cards done"
+  },
+  {
+    "type": "ai",
+    "name": "model",
+    "content": "",
+    "tool_calls": [
+      "adp_create_employee",
+      "mercury_issue_card",
+      "okta_assign_admin_role",
+      "crm_delete_account",
+      "tracker_search"
+    ]
+  },
+  {
+    "type": "tool",
+    "name": "adp_create_employee",
+    "status": "success",
+    "content": "adp_create_employee done"
+  },
+  {
+    "type": "tool",
+    "name": "mercury_issue_card",
+    "status": "error",
+    "content": "The approver rejected this call: Not this month.. The tool was not run."
+  },
+  {
+    "type": "tool",
+    "name": "okta_assign_admin_role",
+    "status": "error",
+    "content": "The approver rejected this call: Not approved.. The tool was not run."
+  },
+  {
+    "type": "tool",
+    "name": "crm_delete_account",
+    "status": "error",
+    "content": "Governance denied this call (deny). The tool was not run."
+  },
+  {
+    "type": "tool",
+    "name": "tracker_search",
+    "status": "success",
+    "content": "tracker_search done"
+  },
+  {
+    "type": "ai",
+    "name": "model",
+    "content": "Maya is set up.",
+    "tool_calls": []
+  }
+]
+
+=== thread next / interrupts ===
+{
+  "next": [],
+  "tasks": []
+}
+
+=== final approvals (state per tool) ===
+[
+  {
+    "tool": "ext:fernhill-desk:mercury_issue_card",
+    "state": "rejected",
+    "resolution_history": [
+      {
+        "resolution": "rejected",
+        "by": {
+          "id": "user_approver",
+          "kind": "user",
+          "display_name": "Approver"
+        },
+        "at": "2026-11-03T04:54:59.609Z",
+        "reason": "Not this month."
+      }
+    ]
+  },
+  {
+    "tool": "ext:fernhill-desk:okta_assign_admin_role",
+    "state": "rejected",
+    "resolution_history": [
+      {
+        "resolution": "rejected",
+        "by": {
+          "id": "user_approver",
+          "kind": "user",
+          "display_name": "Approver"
+        },
+        "at": "2026-11-03T04:55:03.379Z",
+        "reason": "Not approved."
+      }
+    ]
+  },
+  {
+    "tool": "ext:fernhill-desk:adp_create_employee",
+    "state": "consumed",
+    "resolution_history": [
+      {
+        "resolution": "approved",
+        "by": {
+          "id": "user_approver",
+          "kind": "user",
+          "display_name": "Approver"
+        },
+        "at": "2026-11-03T04:54:55.607Z"
+      }
+    ]
+  },
+  {
+    "tool": "ext:fernhill-desk:print_order_business_cards",
+    "state": "consumed",
+    "resolution_history": [
+      {
+        "resolution": "approved",
+        "by": {
+          "id": "user_approver",
+          "kind": "user",
+          "display_name": "Approver"
+        },
+        "at": "2026-11-03T04:54:42.594Z"
+      }
+    ]
+  },
+  {
+    "tool": "ext:fernhill-desk:merch_order_polos",
+    "state": "consumed",
+    "resolution_history": [
+      {
+        "resolution": "approved",
+        "by": {
+          "id": "user_approver",
+          "kind": "user",
+          "display_name": "Approver"
+        },
+        "at": "2026-11-03T04:54:46.595Z"
+      }
+    ]
+  },
+  {
+    "tool": "ext:fernhill-desk:cdw_order_laptop",
+    "state": "consumed",
+    "resolution_history": [
+      {
+        "resolution": "approved",
+        "by": {
+          "id": "user_approver",
+          "kind": "user",
+          "display_name": "Approver"
+        },
+        "at": "2026-11-03T04:54:50.598Z"
+      }
+    ]
+  },
+  {
+    "tool": "ext:fernhill-desk:slack_invite",
+    "state": "consumed",
+    "resolution_history": [
+      {
+        "resolution": "approved",
+        "by": {
+          "id": "user_approver",
+          "kind": "user",
+          "display_name": "Approver"
+        },
+        "at": "2026-11-03T04:54:29.583Z"
+      }
+    ]
+  },
+  {
+    "tool": "ext:fernhill-desk:okta_create_user",
+    "state": "consumed",
+    "resolution_history": [
+      {
+        "resolution": "approved",
+        "by": {
+          "id": "user_approver",
+          "kind": "user",
+          "display_name": "Approver"
+        },
+        "at": "2026-11-03T04:54:33.584Z"
+      }
+    ]
+  },
+  {
+    "tool": "ext:fernhill-desk:google_create_account",
+    "state": "consumed",
+    "resolution_history": [
+      {
+        "resolution": "approved",
+        "by": {
+          "id": "user_approver",
+          "kind": "user",
+          "display_name": "Approver"
+        },
+        "at": "2026-11-03T04:54:37.589Z"
+      }
+    ]
+  },
+  {
+    "tool": "tool:noblecloak:propose-policy-set",
+    "state": "consumed",
+    "resolution_history": [
+      {
+        "resolution": "approved",
+        "by": {
+          "id": "user_creator",
+          "kind": "user",
+          "display_name": "Creator"
+        },
+        "at": "2026-11-03T04:54:25.581Z"
+      }
+    ]
+  }
+]

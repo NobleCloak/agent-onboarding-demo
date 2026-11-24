@@ -1,0 +1,319 @@
+{
+  "agent": {
+    "principal_id": "svc_adapter"
+  },
+  "tools": [
+    {
+      "tool_ref": "ext:fernhill-desk:okta_create_user",
+      "description": "Create a user in Fernhill's Okta directory.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "username"
+        ]
+      },
+      "side_effect_level": "write",
+      "show_arguments_to_approvers": true
+    },
+    {
+      "tool_ref": "ext:fernhill-desk:google_create_account",
+      "description": "Create a Google Workspace account.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "side_effect_level": "external",
+      "show_arguments_to_approvers": true
+    },
+    {
+      "tool_ref": "ext:fernhill-desk:slack_invite",
+      "description": "Invite a person to Slack by email.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "side_effect_level": "external",
+      "show_arguments_to_approvers": true
+    },
+    {
+      "tool_ref": "ext:fernhill-desk:cdw_order_laptop",
+      "description": "Order a laptop from CDW.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string"
+          },
+          "ship_to": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "model",
+          "ship_to"
+        ]
+      },
+      "side_effect_level": "external",
+      "show_arguments_to_approvers": true
+    },
+    {
+      "tool_ref": "ext:fernhill-desk:merch_order_polos",
+      "description": "Order polos from Pennant & Co.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "quantity": {
+            "type": "number"
+          },
+          "recipient": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "quantity",
+          "recipient"
+        ]
+      },
+      "side_effect_level": "external",
+      "show_arguments_to_approvers": true
+    },
+    {
+      "tool_ref": "ext:fernhill-desk:print_order_business_cards",
+      "description": "Order business cards from Harbor Print Works.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "quantity": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "quantity",
+          "name"
+        ]
+      },
+      "side_effect_level": "external",
+      "show_arguments_to_approvers": true
+    },
+    {
+      "tool_ref": "ext:fernhill-desk:adp_create_employee",
+      "description": "Create an employee record in ADP, including the salary source.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "employee": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "salary_source": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "employee",
+          "title",
+          "salary_source"
+        ]
+      },
+      "side_effect_level": "external",
+      "show_arguments_to_approvers": true
+    },
+    {
+      "tool_ref": "ext:fernhill-desk:mercury_issue_card",
+      "description": "Issue a Mercury card with a monthly limit.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "cardholder": {
+            "type": "string"
+          },
+          "limit_monthly": {
+            "type": "number"
+          },
+          "copied_from": {
+            "type": "string"
+          },
+          "account": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "cardholder",
+          "limit_monthly",
+          "copied_from",
+          "account"
+        ]
+      },
+      "side_effect_level": "external",
+      "show_arguments_to_approvers": true
+    },
+    {
+      "tool_ref": "ext:fernhill-desk:okta_assign_admin_role",
+      "description": "Assign an administrator role in Fernhill's Okta directory.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "user",
+          "role"
+        ]
+      },
+      "side_effect_level": "admin",
+      "show_arguments_to_approvers": true
+    }
+  ],
+  "policies": [
+    {
+      "role": "baseline",
+      "tool": "ext:fernhill-desk:okta_create_user",
+      "mode": "always_allow",
+      "rationale": "Creates one user in Fernhill's own directory, which Fernhill can deactivate; no money moves. Fernhill has also decided this routine onboarding step runs without a person's approval; that is the company's decision.",
+      "assessment": {
+        "side_effect_level": "write",
+        "blast_radius": "one_record",
+        "reversible": true,
+        "external_party": false,
+        "financial": false
+      }
+    },
+    {
+      "role": "baseline",
+      "tool": "ext:fernhill-desk:google_create_account",
+      "mode": "always_allow",
+      "rationale": "Creates one account at Google, an outside vendor, and Fernhill's app cannot undo it; the tool makes no purchase. Fernhill has decided this routine onboarding step runs without a person's approval; that is the company's decision, not what the risk assessment alone would pick.",
+      "assessment": {
+        "side_effect_level": "external",
+        "blast_radius": "one_record",
+        "reversible": false,
+        "external_party": true,
+        "financial": false
+      }
+    },
+    {
+      "role": "baseline",
+      "tool": "ext:fernhill-desk:slack_invite",
+      "mode": "always_allow",
+      "rationale": "Sends one invite through Slack, an outside vendor, and it cannot be recalled by Fernhill's app; the tool makes no purchase. Fernhill has decided this routine onboarding step runs without a person's approval; that is the company's decision, not what the risk assessment alone would pick.",
+      "assessment": {
+        "side_effect_level": "external",
+        "blast_radius": "one_record",
+        "reversible": false,
+        "external_party": true,
+        "financial": false
+      }
+    },
+    {
+      "role": "baseline",
+      "tool": "ext:fernhill-desk:cdw_order_laptop",
+      "mode": "always_allow",
+      "rationale": "Places one order with CDW, an outside vendor: it spends money and Fernhill's app cannot undo it. Fernhill has decided this routine onboarding step runs without a person's approval; that is the company's decision, not what the risk assessment alone would pick.",
+      "assessment": {
+        "side_effect_level": "external",
+        "blast_radius": "one_record",
+        "reversible": false,
+        "external_party": true,
+        "financial": true
+      }
+    },
+    {
+      "role": "baseline",
+      "tool": "ext:fernhill-desk:merch_order_polos",
+      "mode": "always_allow",
+      "rationale": "Places one order with Pennant & Co., an outside vendor: it spends money and Fernhill's app cannot undo it. Fernhill has decided this routine onboarding step runs without a person's approval; that is the company's decision, not what the risk assessment alone would pick.",
+      "assessment": {
+        "side_effect_level": "external",
+        "blast_radius": "one_record",
+        "reversible": false,
+        "external_party": true,
+        "financial": true
+      }
+    },
+    {
+      "role": "baseline",
+      "tool": "ext:fernhill-desk:print_order_business_cards",
+      "mode": "always_allow",
+      "rationale": "Places one order with Harbor Print Works, an outside vendor: it spends money and Fernhill's app cannot undo it. Fernhill has decided this routine onboarding step runs without a person's approval; that is the company's decision, not what the risk assessment alone would pick.",
+      "assessment": {
+        "side_effect_level": "external",
+        "blast_radius": "one_record",
+        "reversible": false,
+        "external_party": true,
+        "financial": true
+      }
+    },
+    {
+      "role": "baseline",
+      "tool": "ext:fernhill-desk:adp_create_employee",
+      "mode": "ask",
+      "rationale": "Creates an employee record at ADP, an outside vendor, which commits salary and cannot be undone from Fernhill's app, so a person approves each one.",
+      "assessment": {
+        "side_effect_level": "external",
+        "blast_radius": "one_record",
+        "reversible": false,
+        "external_party": true,
+        "financial": true
+      }
+    },
+    {
+      "role": "baseline",
+      "tool": "ext:fernhill-desk:mercury_issue_card",
+      "mode": "ask",
+      "rationale": "Issues a spending card at Mercury, an outside vendor: it commits company money and Fernhill's app cannot undo it, so a person approves each one.",
+      "assessment": {
+        "side_effect_level": "external",
+        "blast_radius": "one_record",
+        "reversible": false,
+        "external_party": true,
+        "financial": true
+      }
+    },
+    {
+      "role": "baseline",
+      "tool": "ext:fernhill-desk:okta_assign_admin_role",
+      "mode": "deny",
+      "rationale": "Grants administrator power over the whole organisation. The role can be removed afterwards, but what it allowed in the meantime cannot. Fernhill has decided the agent must never do this, so it is denied.",
+      "assessment": {
+        "side_effect_level": "admin",
+        "blast_radius": "org_wide",
+        "reversible": true,
+        "external_party": false,
+        "financial": false
+      }
+    }
+  ]
+}

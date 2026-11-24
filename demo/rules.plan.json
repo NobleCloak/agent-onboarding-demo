@@ -1,0 +1,225 @@
+{
+  "agent": {
+    "principal_id": "svc_adapter"
+  },
+  "tools": [
+    {
+      "tool_ref": "ext:fernhill-desk:okta_create_user",
+      "description": "Create the new hire's Okta user.",
+      "input_schema": {
+        "type": "object"
+      },
+      "side_effect_level": "external",
+      "show_arguments_to_approvers": true
+    },
+    {
+      "tool_ref": "ext:fernhill-desk:google_create_account",
+      "description": "Create the new hire's Google Workspace account.",
+      "input_schema": {
+        "type": "object"
+      },
+      "side_effect_level": "external",
+      "show_arguments_to_approvers": true
+    },
+    {
+      "tool_ref": "ext:fernhill-desk:slack_invite",
+      "description": "Invite the new hire to Fernhill's Slack.",
+      "input_schema": {
+        "type": "object"
+      },
+      "side_effect_level": "external",
+      "show_arguments_to_approvers": true
+    },
+    {
+      "tool_ref": "ext:fernhill-desk:cdw_order_laptop",
+      "description": "Order the new hire's laptop from CDW.",
+      "input_schema": {
+        "type": "object"
+      },
+      "side_effect_level": "external",
+      "show_arguments_to_approvers": true
+    },
+    {
+      "tool_ref": "ext:fernhill-desk:merch_order_polos",
+      "description": "Order company polos for the new hire.",
+      "input_schema": {
+        "type": "object"
+      },
+      "side_effect_level": "external",
+      "show_arguments_to_approvers": true
+    },
+    {
+      "tool_ref": "ext:fernhill-desk:print_order_business_cards",
+      "description": "Order the new hire's business cards.",
+      "input_schema": {
+        "type": "object"
+      },
+      "side_effect_level": "external",
+      "show_arguments_to_approvers": true
+    },
+    {
+      "tool_ref": "ext:fernhill-desk:adp_create_employee",
+      "description": "Create the new hire's payroll record in ADP.",
+      "input_schema": {
+        "type": "object"
+      },
+      "side_effect_level": "external",
+      "show_arguments_to_approvers": true
+    },
+    {
+      "tool_ref": "ext:fernhill-desk:mercury_issue_card",
+      "description": "Issue the new hire a company card on Mercury.",
+      "input_schema": {
+        "type": "object"
+      },
+      "side_effect_level": "external",
+      "show_arguments_to_approvers": true
+    },
+    {
+      "tool_ref": "ext:fernhill-desk:okta_assign_admin_role",
+      "description": "Assign an Okta administrator role.",
+      "input_schema": {
+        "type": "object"
+      },
+      "side_effect_level": "admin",
+      "show_arguments_to_approvers": true
+    }
+  ],
+  "policies": [
+    {
+      "role": "baseline",
+      "tool": "ext:fernhill-desk:okta_create_user",
+      "mode": "always_allow",
+      "rationale": "This is the company's decision: routine account setup for a new hire, one user in Fernhill's own directory that can be deactivated, so no sign-off is needed.",
+      "assessment": {
+        "side_effect_level": "external",
+        "blast_radius": "one_record",
+        "reversible": true,
+        "external_party": false,
+        "financial": false
+      },
+      "name": "Create the new hire in Okta \u2014 runs freely",
+      "description": "Fernhill lets the onboarding agent create Okta accounts without asking."
+    },
+    {
+      "role": "baseline",
+      "tool": "ext:fernhill-desk:google_create_account",
+      "mode": "always_allow",
+      "rationale": "This is the company's decision: routine account setup for a new hire, one account in Fernhill's own workspace that can be suspended, so no sign-off is needed.",
+      "assessment": {
+        "side_effect_level": "external",
+        "blast_radius": "one_record",
+        "reversible": true,
+        "external_party": false,
+        "financial": false
+      },
+      "name": "Create the Google Workspace account \u2014 runs freely",
+      "description": "Fernhill lets the onboarding agent create Google accounts without asking."
+    },
+    {
+      "role": "baseline",
+      "tool": "ext:fernhill-desk:slack_invite",
+      "mode": "always_allow",
+      "rationale": "This is the company's decision: routine setup for a new hire, one invitation to Fernhill's own workspace that can be revoked, so no sign-off is needed.",
+      "assessment": {
+        "side_effect_level": "external",
+        "blast_radius": "one_record",
+        "reversible": true,
+        "external_party": false,
+        "financial": false
+      },
+      "name": "Invite to Slack \u2014 runs freely",
+      "description": "Fernhill lets the onboarding agent send Slack invitations without asking."
+    },
+    {
+      "role": "baseline",
+      "tool": "ext:fernhill-desk:cdw_order_laptop",
+      "mode": "always_allow",
+      "rationale": "This is the company's decision: Fernhill has decided a standard laptop order for a new hire does not need sign-off, even though it spends money with an outside vendor.",
+      "assessment": {
+        "side_effect_level": "external",
+        "blast_radius": "one_record",
+        "reversible": false,
+        "external_party": true,
+        "financial": true
+      },
+      "name": "Order the laptop from CDW \u2014 runs freely",
+      "description": "A vendor order, but Fernhill has decided routine laptop orders need no approval."
+    },
+    {
+      "role": "baseline",
+      "tool": "ext:fernhill-desk:merch_order_polos",
+      "mode": "always_allow",
+      "rationale": "This is the company's decision: Fernhill has decided company polos for a new hire do not need sign-off, even though it spends money with an outside vendor.",
+      "assessment": {
+        "side_effect_level": "external",
+        "blast_radius": "one_record",
+        "reversible": false,
+        "external_party": true,
+        "financial": true
+      },
+      "name": "Order welcome polos \u2014 runs freely",
+      "description": "A vendor order, but Fernhill has decided routine merchandise orders need no approval."
+    },
+    {
+      "role": "baseline",
+      "tool": "ext:fernhill-desk:print_order_business_cards",
+      "mode": "always_allow",
+      "rationale": "This is the company's decision: Fernhill has decided business cards for a new hire do not need sign-off, even though it spends money with an outside vendor.",
+      "assessment": {
+        "side_effect_level": "external",
+        "blast_radius": "one_record",
+        "reversible": false,
+        "external_party": true,
+        "financial": true
+      },
+      "name": "Order business cards \u2014 runs freely",
+      "description": "A vendor order, but Fernhill has decided routine print orders need no approval."
+    },
+    {
+      "role": "baseline",
+      "tool": "ext:fernhill-desk:adp_create_employee",
+      "mode": "ask",
+      "rationale": "Creates a payroll record with a salary at an outside payroll provider: it commits money and is hard to undo cleanly, so a person checks every one.",
+      "assessment": {
+        "side_effect_level": "external",
+        "blast_radius": "one_record",
+        "reversible": false,
+        "external_party": true,
+        "financial": true
+      },
+      "name": "Add the employee to ADP payroll \u2014 a person approves",
+      "description": "Creates a payroll record; a person approves each one."
+    },
+    {
+      "role": "baseline",
+      "tool": "ext:fernhill-desk:mercury_issue_card",
+      "mode": "ask",
+      "rationale": "Issues a company card with a spending limit: it commits money and spend cannot be recalled, so Finance checks every new card.",
+      "assessment": {
+        "side_effect_level": "external",
+        "blast_radius": "one_record",
+        "reversible": false,
+        "external_party": true,
+        "financial": true
+      },
+      "name": "Issue a Mercury company card \u2014 a person approves",
+      "description": "Issues a card that spends company money; a person approves each one."
+    },
+    {
+      "role": "baseline",
+      "tool": "ext:fernhill-desk:okta_assign_admin_role",
+      "mode": "deny",
+      "rationale": "Grants administrator rights across the whole directory. This agent must never do it, whatever the arguments.",
+      "assessment": {
+        "side_effect_level": "admin",
+        "blast_radius": "org_wide",
+        "reversible": true,
+        "external_party": false,
+        "financial": false
+      },
+      "name": "Grant Okta admin rights \u2014 never",
+      "description": "The agent must never give anyone Okta administrator rights."
+    }
+  ]
+}

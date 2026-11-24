@@ -1,0 +1,19 @@
+node_modules/
+.env*
+!.env.example
+*.credentials.json
+.data/
+*.sqlite*
+.next/
+dist/
+out/
+test-results/
+playwright-report/
+blob-report/
+coverage/
+next-env.d.ts
+*.tsbuildinfo
+
+# The demo launcher's record of the processes it started
+.demo-launcher.json*
+.reset-backups/

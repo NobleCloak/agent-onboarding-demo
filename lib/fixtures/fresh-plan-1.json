@@ -1,0 +1,328 @@
+{
+  "agent": {
+    "principal_id": "svc_adapter"
+  },
+  "tools": [
+    {
+      "tool_ref": "ext:fernhill-desk:okta_create_user",
+      "description": "Create the new hire's user in Fernhill's Okta directory.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "username"
+        ],
+        "additionalProperties": false
+      },
+      "side_effect_level": "external",
+      "show_arguments_to_approvers": true
+    },
+    {
+      "tool_ref": "ext:fernhill-desk:google_create_account",
+      "description": "Create the new hire's Google Workspace account.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email"
+        ],
+        "additionalProperties": false
+      },
+      "side_effect_level": "external",
+      "show_arguments_to_approvers": true
+    },
+    {
+      "tool_ref": "ext:fernhill-desk:slack_invite",
+      "description": "Invite the new hire to Fernhill's Slack workspace.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email"
+        ],
+        "additionalProperties": false
+      },
+      "side_effect_level": "external",
+      "show_arguments_to_approvers": true
+    },
+    {
+      "tool_ref": "ext:fernhill-desk:cdw_order_laptop",
+      "description": "Order the new hire's laptop from CDW.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string"
+          },
+          "ship_to": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "model",
+          "ship_to"
+        ],
+        "additionalProperties": false
+      },
+      "side_effect_level": "external",
+      "show_arguments_to_approvers": true
+    },
+    {
+      "tool_ref": "ext:fernhill-desk:merch_order_polos",
+      "description": "Order company polos for the new hire from Pennant & Co.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "quantity": {
+            "type": "number"
+          },
+          "recipient": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "quantity",
+          "recipient"
+        ],
+        "additionalProperties": false
+      },
+      "side_effect_level": "external",
+      "show_arguments_to_approvers": true
+    },
+    {
+      "tool_ref": "ext:fernhill-desk:print_order_business_cards",
+      "description": "Order the new hire's business cards from Harbor Print Works.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "quantity": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "quantity",
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "side_effect_level": "external",
+      "show_arguments_to_approvers": true
+    },
+    {
+      "tool_ref": "ext:fernhill-desk:adp_create_employee",
+      "description": "Create the new hire's employee record, with salary, in ADP.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "employee": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "salary_source": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "employee",
+          "title",
+          "salary_source"
+        ],
+        "additionalProperties": false
+      },
+      "side_effect_level": "external",
+      "show_arguments_to_approvers": true
+    },
+    {
+      "tool_ref": "ext:fernhill-desk:mercury_issue_card",
+      "description": "Issue the new hire a company card on Mercury, with a monthly limit.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "cardholder": {
+            "type": "string"
+          },
+          "limit_monthly": {
+            "type": "number"
+          },
+          "copied_from": {
+            "type": "string"
+          },
+          "account": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "cardholder",
+          "limit_monthly",
+          "copied_from",
+          "account"
+        ],
+        "additionalProperties": false
+      },
+      "side_effect_level": "external",
+      "show_arguments_to_approvers": true
+    },
+    {
+      "tool_ref": "ext:fernhill-desk:okta_assign_admin_role",
+      "description": "Assign an administrator role in Fernhill's Okta directory.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "user",
+          "role"
+        ],
+        "additionalProperties": false
+      },
+      "side_effect_level": "admin",
+      "show_arguments_to_approvers": true
+    }
+  ],
+  "policies": [
+    {
+      "role": "baseline",
+      "tool": "ext:fernhill-desk:okta_create_user",
+      "mode": "always_allow",
+      "rationale": "Fernhill's decision: this runs without sign-off as routine onboarding. It adds one user to Fernhill's own directory, involves no outside party or money, and the user can be deactivated.",
+      "assessment": {
+        "side_effect_level": "external",
+        "blast_radius": "one_record",
+        "reversible": true,
+        "external_party": false,
+        "financial": false
+      }
+    },
+    {
+      "role": "baseline",
+      "tool": "ext:fernhill-desk:google_create_account",
+      "mode": "always_allow",
+      "rationale": "Fernhill's decision: this runs without sign-off as routine onboarding, even though the rubric would ask a person. It creates one account at an outside vendor, Google, and Fernhill's own system cannot undo it.",
+      "assessment": {
+        "side_effect_level": "external",
+        "blast_radius": "one_record",
+        "reversible": false,
+        "external_party": true,
+        "financial": false
+      }
+    },
+    {
+      "role": "baseline",
+      "tool": "ext:fernhill-desk:slack_invite",
+      "mode": "always_allow",
+      "rationale": "Fernhill's decision: this runs without sign-off as routine onboarding, even though the rubric would ask a person. It sends one invitation through an outside vendor, Slack, and a sent invitation cannot be recalled.",
+      "assessment": {
+        "side_effect_level": "external",
+        "blast_radius": "one_record",
+        "reversible": false,
+        "external_party": true,
+        "financial": false
+      }
+    },
+    {
+      "role": "baseline",
+      "tool": "ext:fernhill-desk:cdw_order_laptop",
+      "mode": "always_allow",
+      "rationale": "Fernhill's decision: this runs without sign-off as routine onboarding, even though the rubric would ask a person. It spends money with an outside vendor, CDW, and a placed order cannot be undone from Fernhill's system.",
+      "assessment": {
+        "side_effect_level": "external",
+        "blast_radius": "one_record",
+        "reversible": false,
+        "external_party": true,
+        "financial": true
+      }
+    },
+    {
+      "role": "baseline",
+      "tool": "ext:fernhill-desk:merch_order_polos",
+      "mode": "always_allow",
+      "rationale": "Fernhill's decision: this runs without sign-off as routine onboarding, even though the rubric would ask a person. It spends money with an outside vendor, Pennant & Co., and a placed order cannot be undone from Fernhill's system.",
+      "assessment": {
+        "side_effect_level": "external",
+        "blast_radius": "one_record",
+        "reversible": false,
+        "external_party": true,
+        "financial": true
+      }
+    },
+    {
+      "role": "baseline",
+      "tool": "ext:fernhill-desk:print_order_business_cards",
+      "mode": "always_allow",
+      "rationale": "Fernhill's decision: this runs without sign-off as routine onboarding, even though the rubric would ask a person. It spends money with an outside vendor, Harbor Print Works, and a placed order cannot be undone from Fernhill's system.",
+      "assessment": {
+        "side_effect_level": "external",
+        "blast_radius": "one_record",
+        "reversible": false,
+        "external_party": true,
+        "financial": true
+      }
+    },
+    {
+      "role": "baseline",
+      "tool": "ext:fernhill-desk:adp_create_employee",
+      "mode": "ask",
+      "rationale": "Creates a payroll record with a salary at an outside provider, ADP. It commits money and Fernhill's own system cannot undo it, so a person approves each one.",
+      "assessment": {
+        "side_effect_level": "external",
+        "blast_radius": "one_record",
+        "reversible": false,
+        "external_party": true,
+        "financial": true
+      }
+    },
+    {
+      "role": "baseline",
+      "tool": "ext:fernhill-desk:mercury_issue_card",
+      "mode": "ask",
+      "rationale": "Issues a company card with a spending limit through an outside bank platform, Mercury. It commits money and spending cannot be recalled, so a person approves each one.",
+      "assessment": {
+        "side_effect_level": "external",
+        "blast_radius": "one_record",
+        "reversible": false,
+        "external_party": true,
+        "financial": true
+      }
+    },
+    {
+      "role": "baseline",
+      "tool": "ext:fernhill-desk:okta_assign_admin_role",
+      "mode": "deny",
+      "rationale": "Fernhill's decision: the agent must never do this. It grants administrator rights across the whole directory. The role itself can be removed, but what an administrator does with it may not be undoable.",
+      "assessment": {
+        "side_effect_level": "admin",
+        "blast_radius": "org_wide",
+        "reversible": true,
+        "external_party": false,
+        "financial": false
+      }
+    }
+  ]
+}

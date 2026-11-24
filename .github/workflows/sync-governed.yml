@@ -1,0 +1,81 @@
+# Keeps demo/governed level with main.
+#
+# demo/governed is main plus the NobleCloak install (src/noblecloak/ and the edits to src/agent/). The README's
+# "use the prebuilt copy" path and the presenter's fallback both check it out, so it must carry whatever main has.
+# After every push to main this merges main into demo/governed, checks the result, and pushes it.
+#
+# The job can write to the repository, and it runs code from the dependencies (install, tests). So the actions are
+# pinned to exact commits, the checkout does not leave the token in the git config, and only the push step gets it.
+#
+# It never merges the other way. If the merge conflicts or a check fails, nothing is pushed and the run fails:
+# merge main into demo/governed by hand, fix it, and push.
+name: Sync demo/governed
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: sync-governed
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: demo/governed
+          # Every branch, with history: origin/main is here for the merge, so no later fetch needs the token.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Merge main
+        id: merge
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git merge-base --is-ancestor origin/main HEAD; then
+            echo "demo/governed already has everything on main."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git merge --no-ff origin/main -m "chore: merge main into demo/governed ($(git rev-parse --short origin/main))"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: The install is still there
+        if: steps.merge.outputs.changed == 'true'
+        run: test -s src/noblecloak/worker.ts && test -s src/noblecloak/governed-agent.ts
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        if: steps.merge.outputs.changed == 'true'
+        with:
+          node-version: 24
+
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        if: steps.merge.outputs.changed == 'true'
+        with:
+          bun-version-file: package.json
+
+      - name: Install
+        if: steps.merge.outputs.changed == 'true'
+        run: bun install --frozen-lockfile
+
+      - name: Type check
+        if: steps.merge.outputs.changed == 'true'
+        run: bunx tsc --noEmit
+
+      - name: Unit tests
+        if: steps.merge.outputs.changed == 'true'
+        run: bun run test
+
+      - name: Push
+        if: steps.merge.outputs.changed == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}" HEAD:demo/governed
