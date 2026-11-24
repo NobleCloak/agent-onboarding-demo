@@ -11,6 +11,11 @@ vi.mock("./agent", () => ({
     invoke: (_input: unknown, config: { configurable: { thread_id: string } }) => behavior(config.configurable.thread_id),
   }),
 }));
+vi.mock("../noblecloak/governance", () => ({ agentGovernance: async () => ({}) }));
+vi.mock("../noblecloak/governed-agent", async () => {
+  const { buildAgent } = await import("./agent");
+  return { buildGovernedAgent: () => buildAgent() };
+});
 import { startAgentRun } from "./start";
 
 let dir: string;

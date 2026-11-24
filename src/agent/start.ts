@@ -1,12 +1,15 @@
 import { HumanMessage } from "@langchain/core/messages";
+import { agentGovernance } from "../noblecloak/governance";
+import { buildGovernedAgent } from "../noblecloak/governed-agent";
 import { reconcile } from "../run/reconcile";
 import { deleteCheckpoints, failUnfinishedSteps, isCurrent, setRunState } from "../run/store";
-import { buildAgent, PROMPT } from "./agent";
+import { PROMPT } from "./agent";
 
 /** Run the agent for one run id (the checkpoint thread). Never throws: a failure is logged and shown on the run. */
 export async function startAgentRun(runId: string): Promise<void> {
   try {
-    const result = (await buildAgent().invoke(
+    const agent = buildGovernedAgent(await agentGovernance());
+    const result = (await agent.invoke(
       { messages: [new HumanMessage(PROMPT)] },
       { configurable: { thread_id: runId } },
     )) as { __interrupt__?: unknown[] };

@@ -2,10 +2,17 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import Database from "better-sqlite3";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { closeStore, getRun, resetRun, startRun } from "../run/store";
 import { TOOLS } from "./agent";
 import { startAgentRun } from "./start";
+
+// These tests drive the real agent without a deployment: the governed build is the plain one here.
+vi.mock("../noblecloak/governance", () => ({ agentGovernance: async () => ({}) }));
+vi.mock("../noblecloak/governed-agent", async () => {
+  const { buildAgent } = await import("./agent");
+  return { buildGovernedAgent: () => buildAgent() };
+});
 
 let dir: string;
 beforeEach(() => {
